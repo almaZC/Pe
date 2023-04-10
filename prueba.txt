@@ -25,18 +25,46 @@ fuepe
 
 meVoy(variable):
     a 4:
-        x=5 \pe 
+        x=5/2 \pe 
         zafa \pe 
     a 10:
-        x=9 \pe
+        x=9*4 \pe
         zafa \pe 
 fuepe
 
+Si(booleano1):
+    x=56 \pe
+Sino:
+    x=12 \pe
+fuepe
+
+para (i=0, i:(5, i++) hazte:
+    Si(i==3):
+        saltate \pe
+    fuepe
+    x=x-3 \pe
+fuepe
+
+micriterio:
+    imprime(mensaje) \pe
+    i++ \pe
+fuepe
+
+funcion deCine(codigo, no, entiendo):
+    imprime("Hola, causa") \pe 
+    codigo=no +4 \pe 
+    entiendo=codigo/9 \pe
+fuepe
+
+checa feik : "En efecto, es falso" \pe 
+
+menu DeLaSemana: GuisoLentejas, Ajiaco, AjiDePollo, Sopaseca, Pachamanca, Parihuela \pe
 
 
-
-
-
+random=tinka() \pe 
+Si(random:(0):
+    vetea esNegativo \pe
+fuepe
 
 
 

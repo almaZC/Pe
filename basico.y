@@ -24,7 +24,7 @@ int nSim=0;
 TipoTablaDeSimbolos tablaDeSimbolos[200];
 %}
 
-%token  MIENTRAS ID IGUAL NUMENT SUMA CAMBIOLINEA PARIZQ FUEPE DOSPUNT PARDER RESTA MUL DIV ZAFA ENDL PARA HACER MANYA TRAETE VETEA GUARDARMEM IMPRIME LEE MENORQUE MAYORQUE MEVOY A IGUALQUE MAYORIGUALQUE MENORIGUALQUE COMILLAS LIBRERIA TINKA PALTA CRITERIO EXCLAMACION CADENA SALTATE FUNCION CHECA COMA DEVUELVE VERDURA FEIK CONDSI SINO POSINC PUNTERO MENU
+%token  MIENTRAS ID IGUAL NUMENT SUMA PARIZQ FUEPE DOSPUNT PARDER RESTA MUL DIV ZAFA ENDL PARA HACER MANYA TRAETE VETEA GUARDARMEM IMPRIME LEE MENORQUE MAYORQUE MEVOY A IGUALQUE MAYORIGUALQUE MENORIGUALQUE COMILLAS LIBRERIA TINKA PALTA CRITERIO EXCLAMACION CADENA SALTATE FUNCION CHECA COMA DEVUELVE VERDURA FEIK CONDSI SINO POSINC PUNTERO MENU
 
 %%
 /*gramatica*/
@@ -43,7 +43,7 @@ instr: ZAFA ENDL;
 
 instr: SALTATE ENDL;
 
-instr: TINKA PARIZQ PARDER ENDL;
+expr: TINKA PARIZQ PARDER;
 
 compara: compara MENORQUE expr;
 
@@ -85,41 +85,53 @@ factor: VERDURA;
 
 factor: FEIK;
 
-
 instr: MIENTRAS PARIZQ compara PARDER HACER bloqinst;
 
-instr: PARA PARIZQ instr COMA compara COMA instr PARDER HACER bloqinst;
+instr: PARA PARIZQ auxPara COMA compara COMA instr PARDER HACER bloqinst;
+
+auxPara: ID {localizaSimbolo(lexema,ID);} IGUAL compara; /*Para la inicializacion dentro del for*/
 
 bloqinst : DOSPUNT listInst FUEPE;
 
+/* Esto es lo original
 instr: CONDSI DOSPUNT PARIZQ instr PARDER bloqinst ENDL; 
 
+El SINO no debería poder estar solo sin que antes exista un SI
 instr: SINO bloqinst;
+*/
+
+/*Sugiero esto*/
+instr: CONDSI PARIZQ compara PARDER bloqinst;
+instr:  CONDSI PARIZQ compara PARDER DOSPUNT listInst bloqSino;
+
+bloqSino: SINO bloqinst;
 
 incluir: TRAETE LIBRERIA;
 
 define: MANYA ID NUMENT;
 
-instr: switch;
-
-switch: MEVOY PARIZQ ID PARDER DOSPUNT listaSwitch FUEPE;
+instr: MEVOY PARIZQ ID {localizaSimbolo(lexema,ID);} PARDER DOSPUNT listaSwitch FUEPE;
 
 listaSwitch: casoSwitch listaSwitch;
-listaSwitch: 
+listaSwitch: ;
 
-casoSwitch: A NUMENT DOSPUNT listInst;
+casoSwitch: A NUMENT {localizaSimbolo(lexema,NUMENT);} DOSPUNT listInst;
 
 instr: IMPRIME PARIZQ CADENA PARDER ENDL; 
 
+instr: IMPRIME PARIZQ ID PARDER ENDL;
+
 instr: LEE PARIZQ ID {localizaSimbolo(lexema,ID);} PARDER ENDL;
 
-instr: ID {localizaSimbolo(lexema,ID);} IGUAL GUARDARMEM PARIZQ NUMENT PARDER ENDL;
+expr: GUARDARMEM PARIZQ NUMENT PARDER;
 
 instr: FUNCION ID {localizaSimbolo(lexema,ID);} PARIZQ listArg PARDER bloqinst;
 
 instr: MENU ID {localizaSimbolo(lexema,ID);} DOSPUNT listArg ENDL; 
 
-instr: VETEA ID {localizaSimbolo(lexema,ID);} ENDL;
+instr: VETEA ID {localizaSimbolo(lexema,ID);}  ENDL;
+
+/*etiqueta: ID {localizaSimbolo(lexema,ID);} DOSPUNT listInst;*/
 
 instr: DEVUELVE ENDL;
 
@@ -137,7 +149,7 @@ instr: CHECA compara DOSPUNT CADENA ENDL;
 
 instr: PALTA ENDL;
 
-random: CRITERIO bloqinst;
+instr: CRITERIO bloqinst;
 
 
 preprocesa: define preprocesa;
@@ -214,7 +226,7 @@ int yylex(){
 						if(!strcmp(lexema, "feik")) return FEIK;
 						if(!strcmp(lexema, "Si")) return CONDSI;
 						if(!strcmp(lexema, "Sino")) return SINO;
-						if(!strcmp(lexema, "Menu")) return MENU;
+						if(!strcmp(lexema, "menu")) return MENU;
 						
 			//localizaSimbolo(lexema,ID);
 			return ID;
