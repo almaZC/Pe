@@ -60,10 +60,14 @@ checa feik : "En efecto, es falso" \pe
 
 menu DeLaSemana: GuisoLentejas, Ajiaco, AjiDePollo, Sopaseca, Pachamanca, Parihuela \pe
 
-
 random=tinka() \pe 
 Si(random:(0):
     vetea esNegativo \pe
+fuepe
+
+etiqueta:
+    imprime("Soy una etiqueta") \pe 
+    x++ \pe 
 fuepe
 
 
