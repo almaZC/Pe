@@ -1,0 +1,44 @@
+manya lp2 3
+traete caballo.h 
+
+
+esVerdad= verdura \pe
+x++ \pe
+
+imprime("awa") \pe
+
+lee(y) \pe
+
+z=x==98 \pe
+
+x=i:(5 \pe 
+x=i:)8 \pe 
+x=i=(7 \pe 
+x=i=)15 \pe 
+
+x=!i \pe
+
+mientras (i) hazte:
+    x=7 \pe
+    x++ \pe
+fuepe
+
+meVoy(variable):
+    a 4:
+        x=5 \pe 
+        zafa \pe 
+    a 10:
+        x=9 \pe
+        zafa \pe 
+fuepe
+
+
+
+
+
+
+
+
+
+
+
