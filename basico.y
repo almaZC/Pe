@@ -24,7 +24,7 @@ int nSim=0;
 TipoTablaDeSimbolos tablaDeSimbolos[200];
 %}
 
-%token  MIENTRAS ID IGUAL NUMENT SUMA PARIZQ FUEPE DOSPUNT PARDER RESTA MUL DIV ZAFA ENDL PARA HACER MANYA TRAETE VETEA GUARDARMEM IMPRIME LEE MENORQUE MAYORQUE MEVOY A IGUALQUE MAYORIGUALQUE MENORIGUALQUE LIBRERIA TINKA PALTA CRITERIO EXCLAMACION CADENA SALTATE FUNCION CHECA COMA DEVUELVE VERDURA FEIK CONDSI SINO POSINC PUNTERO MENU
+%token  MIENTRAS ID IGUAL NUMENT SUMA PARIZQ FUEPE DOSPUNT PARDER RESTA MUL DIV ZAFA ENDL PARA HACER MANYA TRAETE VETEA GUARDARMEM IMPRIME LEE MENORQUE MAYORQUE MEVOY A IGUALQUE MAYORIGUALQUE MENORIGUALQUE LIBRERIA TINKA PALTA CRITERIO EXCLAMACION CADENA SALTATE FUNCION CHECA COMA DEVUELVE VERDURA FEIK CONDSI SINO POSINC PUNTERO MENU ETIQUETA NOHAY
 
 %%
 /*gramatica*/
@@ -85,6 +85,8 @@ factor: VERDURA;
 
 factor: FEIK;
 
+factor: NOHAY;
+
 instr: MIENTRAS PARIZQ compara PARDER HACER bloqinst;
 
 instr: PARA PARIZQ auxPara COMA compara COMA instr PARDER HACER bloqinst;
@@ -133,9 +135,9 @@ instr: VETEA ID {localizaSimbolo(lexema,ID);}  ENDL;
 
 instr: DEVUELVE ENDL;
 
-/*Ojo aqui, esto es peligroso. Permite que se acepten las etiquetas*/
+/*Update, parece mas seguro, pero igual habria que revisar*/
 
-instr: ID DOSPUNT listInst FUEPE;
+instr: ETIQUETA listInst FUEPE;
 
 listArg: arg listArg;
 
@@ -177,11 +179,11 @@ int localizaSimbolo(char *lexema, int token){
 int yylex(){
         char c;int i;
 		char c2,c3;
-	    	c=getchar();
-	    	while(c==' ' || c=='\n' || c=='\t'){ c=getchar(); if(c!=' ' && c!='\n' && c!='\t') break;} 
+		c=getchar();
+		while(c==' ' || c=='\n' || c=='\t'){ c=getchar(); if(c!=' ' && c!='\n' && c!='\t') break;} 
                
                 
-                if(c=='#') return 0;
+		if(c=='#') return 0;
 		if(isalpha(c)){
 			i=0;
 			do{
@@ -190,50 +192,62 @@ int yylex(){
 			}while(isalnum(c));
 			
 			if(c=='.'){
-				c = getchar();
-				if(c=='h'){
+				c2 = getchar();
+				if(c2=='h'){
 					lexema[i++] = '.';
-					lexema[i++] = c;
+					lexema[i++] = c2;
 					lexema[i++] = '\0';
 					return LIBRERIA;
 				} 
-				ungetc('.',stdin);
+				ungetc(c2,stdin);
 			}
 			ungetc(c,stdin);
 			lexema[i++]='\0';
 	
-                        if(!strcmp(lexema,"mientras")) return MIENTRAS; 
-						if(!strcmp(lexema,"hazte")) return HACER; 
-						if(!strcmp(lexema,"traete")) return TRAETE;
-						if(!strcmp(lexema,"zafa")) return ZAFA; 
-						if(!strcmp(lexema,"tinka")) return TINKA;
-						if(!strcmp(lexema,"lee")) return LEE;
-						if(!strcmp(lexema, "micriterio")) return CRITERIO;
-						if(!strcmp(lexema, "quePaltaMeVoy")) return PALTA;
-						if(!strcmp(lexema, "meVoy")) return MEVOY;
-						if(!strcmp(lexema, "fuepe")) return FUEPE;
-						if(!strcmp(lexema, "a")) return A;
-						if(!strcmp(lexema, "manya")) return MANYA;
-						if(!strcmp(lexema, "guardameSitioPorfa")) return GUARDARMEM;
-						if(!strcmp(lexema, "imprime")) return IMPRIME;
-						if(!strcmp(lexema, "saltate")) return SALTATE;
-						if(!strcmp(lexema, "para")) return PARA;
-						if(!strcmp(lexema, "checa")) return CHECA;
-						if(!strcmp(lexema, "funcion")) return FUNCION;
-						if(!strcmp(lexema, "vetea")) return VETEA;
-						if(!strcmp(lexema, "devuelve")) return DEVUELVE;
-						if(!strcmp(lexema, "verdura")) return VERDURA;
-						if(!strcmp(lexema, "feik")) return FEIK;
-						if(!strcmp(lexema, "Si")) return CONDSI;
-						if(!strcmp(lexema, "Sino")) return SINO;
-						if(!strcmp(lexema, "menu")) return MENU;
-						
+			if(!strcmp(lexema,"mientras")) return MIENTRAS; 
+			if(!strcmp(lexema,"hazte")) return HACER; 
+			if(!strcmp(lexema,"traete")) return TRAETE;
+			if(!strcmp(lexema,"zafa")) return ZAFA; 
+			if(!strcmp(lexema,"tinka")) return TINKA;
+			if(!strcmp(lexema,"lee")) return LEE;
+			if(!strcmp(lexema, "micriterio")) return CRITERIO;
+			if(!strcmp(lexema, "quePaltaMeVoy")) return PALTA;
+			if(!strcmp(lexema, "meVoy")) return MEVOY;
+			if(!strcmp(lexema, "fuepe")) return FUEPE;
+			if(!strcmp(lexema, "a")) return A;
+			if(!strcmp(lexema, "manya")) return MANYA;
+			if(!strcmp(lexema, "guardameSitioPorfa")) return GUARDARMEM;
+			if(!strcmp(lexema, "imprime")) return IMPRIME;
+			if(!strcmp(lexema, "saltate")) return SALTATE;
+			if(!strcmp(lexema, "para")) return PARA;
+			if(!strcmp(lexema, "checa")) return CHECA;
+			if(!strcmp(lexema, "funcion")) return FUNCION;
+			if(!strcmp(lexema, "vetea")) return VETEA;
+			if(!strcmp(lexema, "devuelve")) return DEVUELVE;
+			if(!strcmp(lexema, "verdura")) return VERDURA;
+			if(!strcmp(lexema, "feik")) return FEIK;
+			if(!strcmp(lexema, "Si")) return CONDSI;
+			if(!strcmp(lexema, "Sino")) return SINO;
+			if(!strcmp(lexema, "menu")) return MENU;
+			if(!strcmp(lexema, "nohay")) return NOHAY;
+
+			c=getchar();
+			if(c==':'){
+				c2 = getchar();
+				if(c2=='\n'){
+					lexema[--i] = ':';
+					lexema[++i] = '\0';
+					return ETIQUETA;
+				} 
+				ungetc(c2,stdin);
+			}
+			ungetc(c, stdin); 
 			//localizaSimbolo(lexema,ID);
 			return ID;
 
 		}
 
-                if(isdigit(c)){
+			if(isdigit(c)){
 			i=0;
 			do{
 				lexema[i++]=c;
@@ -243,7 +257,7 @@ int yylex(){
 			lexema[i++]='\0';
                          
 			return NUMENT;
-                } 
+			} 
                  
                if(c=='='){
 					c2 = getchar();
