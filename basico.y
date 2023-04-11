@@ -123,7 +123,7 @@ instr: IMPRIME PARIZQ ID PARDER ENDL;
 
 instr: LEE PARIZQ ID {localizaSimbolo(lexema,ID);} PARDER ENDL;
 
-expr: GUARDARMEM PARIZQ NUMENT PARDER;
+expr: GUARDARMEM PARIZQ NUMENT  {localizaSimbolo(lexema,NUMENT);} PARDER;
 
 instr: FUNCION ID {localizaSimbolo(lexema,ID);} PARIZQ listArg PARDER bloqinst;
 
@@ -131,10 +131,9 @@ instr: MENU ID {localizaSimbolo(lexema,ID);} DOSPUNT listArg ENDL;
 
 instr: VETEA ID {localizaSimbolo(lexema,ID);}  ENDL;
 
-/*Ojo aqui, esto es peligroso*/
-instr: ID {localizaSimbolo(lexema, ID);} listInst FUEPE;
-
 instr: DEVUELVE ENDL;
+
+/*Ojo aqui, esto es peligroso. Permite que se acepten las etiquetas*/
 
 instr: ID DOSPUNT listInst FUEPE;
 
