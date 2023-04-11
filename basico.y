@@ -24,7 +24,7 @@ int nSim=0;
 TipoTablaDeSimbolos tablaDeSimbolos[200];
 %}
 
-%token  MIENTRAS ID IGUAL NUMENT SUMA PARIZQ FUEPE DOSPUNT PARDER RESTA MUL DIV ZAFA ENDL PARA HACER MANYA TRAETE VETEA GUARDARMEM IMPRIME LEE MENORQUE MAYORQUE MEVOY A IGUALQUE MAYORIGUALQUE MENORIGUALQUE LIBRERIA TINKA PALTA CRITERIO EXCLAMACION CADENA SALTATE FUNCION CHECA COMA DEVUELVE VERDURA FEIK CONDSI SINO POSINC PUNTERO MENU ETIQUETA NOHAY
+%token  MIENTRAS ID IGUAL NUMENT SUMA PARIZQ FUEPE DOSPUNT PARDER RESTA MUL DIV ZAFA ENDL PARA HACER MANYA TRAETE VETEA GUARDARMEM IMPRIME LEE MENORQUE MAYORQUE MEVOY A IGUALQUE MAYORIGUALQUE MENORIGUALQUE LIBRERIA TINKA PALTA CRITERIO EXCLAMACION CADENA SALTATE DEFFUN CHECA COMA DEVUELVE VERDURA FEIK CONDSI SINO POSINC PUNTERO MENU ETIQUETA NOHAY FUNCION DEFINE
 
 %%
 /*gramatica*/
@@ -110,7 +110,7 @@ bloqSino: SINO bloqinst;
 
 incluir: TRAETE LIBRERIA;
 
-define: MANYA ID NUMENT;
+define: MANYA ID {localizaSimbolo(lexema,DEFINE);} NUMENT;
 
 instr: MEVOY PARIZQ ID {localizaSimbolo(lexema,ID);} PARDER DOSPUNT listaSwitch FUEPE;
 
@@ -121,13 +121,13 @@ casoSwitch: A NUMENT {localizaSimbolo(lexema,NUMENT);} DOSPUNT listInst;
 
 instr: IMPRIME PARIZQ CADENA PARDER ENDL; 
 
-instr: IMPRIME PARIZQ ID PARDER ENDL;
+instr: IMPRIME PARIZQ ID {localizaSimbolo(lexema,ID);}  PARDER ENDL;
 
 instr: LEE PARIZQ ID {localizaSimbolo(lexema,ID);} PARDER ENDL;
 
 expr: GUARDARMEM PARIZQ NUMENT  {localizaSimbolo(lexema,NUMENT);} PARDER;
 
-instr: FUNCION ID {localizaSimbolo(lexema,ID);} PARIZQ listArg PARDER bloqinst;
+instr: DEFFUN ID {localizaSimbolo(lexema,FUNCION);} PARIZQ listArg PARDER bloqinst;
 
 instr: MENU ID {localizaSimbolo(lexema,ID);} DOSPUNT listArg ENDL; 
 
@@ -137,7 +137,7 @@ instr: DEVUELVE ENDL;
 
 /*Update, parece mas seguro, pero igual habria que revisar*/
 
-instr: ETIQUETA listInst FUEPE;
+instr: ETIQUETA {localizaSimbolo(lexema,ETIQUETA);} listInst FUEPE;
 
 listArg: arg listArg;
 
@@ -221,7 +221,7 @@ int yylex(){
 			if(!strcmp(lexema, "saltate")) return SALTATE;
 			if(!strcmp(lexema, "para")) return PARA;
 			if(!strcmp(lexema, "checa")) return CHECA;
-			if(!strcmp(lexema, "funcion")) return FUNCION;
+			if(!strcmp(lexema, "funcion")) return DEFFUN;
 			if(!strcmp(lexema, "vetea")) return VETEA;
 			if(!strcmp(lexema, "devuelve")) return DEVUELVE;
 			if(!strcmp(lexema, "verdura")) return VERDURA;
