@@ -95,14 +95,6 @@ auxPara: ID {localizaSimbolo(lexema,ID);} IGUAL compara; /*Para la inicializacio
 
 bloqinst : DOSPUNT listInst FUEPE;
 
-/* Esto es lo original
-instr: CONDSI DOSPUNT PARIZQ instr PARDER bloqinst ENDL; 
-
-El SINO no debería poder estar solo sin que antes exista un SI
-instr: SINO bloqinst;
-*/
-
-/*Sugiero esto*/
 instr: CONDSI PARIZQ compara PARDER bloqinst;
 instr:  CONDSI PARIZQ compara PARDER DOSPUNT listInst bloqSino;
 
@@ -234,6 +226,7 @@ int yylex(){
 			c=getchar();
 			if(c==':'){
 				c2 = getchar();
+				while(c2==' ' || c2=='\t'){ c2=getchar(); if(c2!=' ' &&  c2!='\t') break;} 
 				if(c2=='\n'){
 					lexema[--i] = ':';
 					lexema[++i] = '\0';

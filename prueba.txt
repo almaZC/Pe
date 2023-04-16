@@ -68,7 +68,7 @@ Si(random:(0):
     vetea esNegativo \pe
 fuepe
 
-etiqueta:
+etiqueta:            
     imprime("Soy una etiqueta") \pe 
     x++ \pe 
 fuepe
